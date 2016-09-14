@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,9 +17,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/user")
 public class UserController {
 
+	@Autowired
+	private HttpServletRequest request;
+	
+	@Autowired
+	private HttpServletResponse response;
+	
 	@ResponseBody
 	@RequestMapping("/queryUser")
-	public Map<String, Object> queryUser(HttpServletRequest request) {
+	public Map<String, Object> queryUser() {
 		int page = Integer.parseInt(request.getParameter("page"));
 		int size = Integer.parseInt(request.getParameter("size"));
 		

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,15 +19,23 @@ import com.ly.test.helloWorld.util.StringUtil;
 @Controller
 public class MainController {
 	
+	@Autowired
+	private HttpServletRequest request;
+	
+	@Autowired
+	private HttpServletResponse response;
+	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping("/")
-	public void index1(HttpServletResponse response) {
-		log.info("redirected");
-		try {
-			response.sendRedirect("login");
-		} catch(Exception e) {
-			log.error("send redirect error:", e);
+	public ModelAndView index1() {
+		String username = (String) request.getSession().getAttribute("username");
+		if (StringUtil.isBlank(username)) {
+			log.info("redirected to login");
+			return new ModelAndView("redirect:/login");
+		} else {
+			log.info("redirected to main");
+			return new ModelAndView("redirect:/main");
 		}
 	}
 	
@@ -37,7 +46,7 @@ public class MainController {
 	
 	@ResponseBody
 	@RequestMapping("/signIn")
-	public String signIn(HttpServletRequest request) {
+	public String signIn() {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		if ("1234".equals(username) && "4321".equals(password)) {
@@ -47,20 +56,23 @@ public class MainController {
 		return "error";
 	}
 	
+	@ResponseBody
+	@RequestMapping("signOut")
+	public String signOut() {
+		request.getSession().removeAttribute("username");
+		return "success";
+	}
+	
 	@RequestMapping("/main")
-	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView main() {
 		String username = (String) request.getSession().getAttribute("username");
 		if (StringUtil.isBlank(username)) {
-			try {
-				response.sendRedirect("login");
-			} catch(Exception e) {
-				log.error("send redirect error:", e);
-			}
+			log.info("redirected to login");
+			return new ModelAndView("redirect:/login");
 		} else {
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("username", username);
 			return new ModelAndView("main", model);
 		}
-		return null;
 	}
 }

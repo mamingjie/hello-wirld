@@ -6,7 +6,7 @@ requirejs(['/resources/js/require_config.js'], function() {
 		
 		function loadPage(page) {
 			$.ajax({
-				url: 'user/queryUser',
+				url: '/user/queryUser',
 				method: 'post',
 				data: {
 					page: page,

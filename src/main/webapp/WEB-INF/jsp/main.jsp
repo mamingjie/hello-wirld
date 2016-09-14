@@ -10,7 +10,7 @@
 <script type="text/javascript" data-main="/resources/js/main.js" src="/resources/js/require.js"></script>
 </head>
 <body>
-Hello ${username }
+<div class="text-primary">Hello ${username }&nbsp;&nbsp;&nbsp;&nbsp;<a href="/signOut">sign out</a></div>
 <div class="container">
 	<div class="col-sm-9">
 		<table class="table table-striped table-bordered" id="dataTable">
