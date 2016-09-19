@@ -3,3 +3,4 @@
 .classpath
 target
 LOG_PATH_IS_UNDEFINED
+.DS_Store
