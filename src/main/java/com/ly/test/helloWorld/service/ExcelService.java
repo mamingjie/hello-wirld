@@ -1,44 +1,32 @@
 package com.ly.test.helloWorld.service;
 
-import java.io.FileOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import com.ly.test.helloWorld.model.ExcelStorage;
+
 @Service
 public class ExcelService {
-
-	public static String filePath = "/Users/mamingjie/Documents/";
 	
-	private static Workbook workbook;
-	private static int sheetCount = 0;
-	private static int sheetComplete = 0;
+	public static final Map<String, ExcelStorage> EXCEL_MAP = new HashMap<>();
 	
-	public void saveFile() {
-		workbook = new XSSFWorkbook();
-		sheetCount = 4;
-		sheetComplete = 0;
-		for (int i=0; i < sheetCount; i++) {
-			Sheet sheet = workbook.createSheet("sheet" + (i+1));
-			XlsxProcessor processor = new XlsxProcessor(sheet);
-			Thread thread = new Thread(processor);
-			thread.start();
-		}
+	public void generatorExcel(int total, String key) {
+		ExcelStorage excelStorage = new ExcelStorage();
+		Workbook workbook = new XSSFWorkbook();
+		
+		excelStorage.setTotal(total);
+		excelStorage.setProgress(0);
+		excelStorage.setWorkbook(workbook);
+		EXCEL_MAP.put(key, excelStorage);
+		
+		Sheet sheet = workbook.createSheet("sheet example");
+		XlsxProcessor processor = new XlsxProcessor(excelStorage, sheet);
+		new Thread(processor).start();
 	}
 	
-	public static void onSheetComplete(Sheet sheet) {
-		sheetComplete++;
-		if (sheetCount == sheetComplete) {
-			try {
-				FileOutputStream fos = new FileOutputStream(filePath + "0000.xlsx");
-				workbook.write(fos);
-				fos.close();
-				workbook.close();
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }
