@@ -10,11 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.ly.test.helloWorld.util.StringUtil;
 
 @Controller
 public class MainController {
@@ -30,7 +29,7 @@ public class MainController {
 	@RequestMapping("/")
 	public ModelAndView index1() {
 		String username = (String) request.getSession().getAttribute("username");
-		if (StringUtil.isBlank(username)) {
+		if (!StringUtils.hasLength(username)) {
 			log.info("redirected to login");
 			return new ModelAndView("redirect:/login");
 		} else {
@@ -66,7 +65,7 @@ public class MainController {
 	@RequestMapping("/main")
 	public ModelAndView main() {
 		String username = (String) request.getSession().getAttribute("username");
-		if (StringUtil.isBlank(username)) {
+		if (!StringUtils.hasLength(username)) {
 			log.info("redirected to login");
 			return new ModelAndView("redirect:/login");
 		} else {
